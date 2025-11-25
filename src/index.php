@@ -7,6 +7,21 @@
         header("refresh:0;url=error_403.html");
         return;
     }
+
+        // Step 2: Get data or params
+    $user_id = $_SESSION['session_user_id'];
+
+    // Step 3: Prepare query
+    $sql_get_user = "select * from users where id = '$user_id'";
+
+    //Step 4: Execute query
+    $result = pg_query($conn_local, $sql_get_user);
+    if (!$result) {
+        die("Error: ". pg_last_error());
+    }
+
+    $row = pg_fetch_assoc($result);
+    $photo = $row['photo'] ?? 'User-icon.jpg';
 ?>  
 
 <!DOCTYPE html>
@@ -350,7 +365,7 @@
                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <span class="mr-2 d-none d-lg-inline text-gray-600 small"><?php echo $_SESSION['session_user_fullname'];?></span>
                                 <img class="img-profile rounded-circle"
-                                    src="photos/<?php echo $_SESSION['session_user_photo'] ?>">
+                                    src="photos/<?php echo $_SESSION['session_user_photo'] ?? 'User-icon.jpg' ?>">
                             </a>
                             <!-- Dropdown - User Information -->
                             <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
